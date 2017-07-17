@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style></style>
+</head>
+<body>
+<div class="container">
+    <div class="row main">
+        <div class="panel-heading">
+            <div class="panel-title text-center">
+                <h1 class="title">Company Name</h1>
+                <hr/>
+            </div>
+        </div>
+        <div class="main-login main-center">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label for="firstname" class="cols-sm-2 control-label">First Name</label>
+
+                    <div class="cols-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                            <input type="text" class="form-control" name="firstname" id="firstname"
+                                   placeholder="Enter your First Name"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="lastname" class="cols-sm-2 control-label">Last Name</label>
+
+                    <div class="cols-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                            <input type="text"
+                                   class="form-control"
+                                   name="lastname"
+                                   id="lastname"
+                                   placeholder="Enter your Last Name"
+                                   required/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="cols-sm-2 control-label">Your Email</label>
+
+                    <div class="cols-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+                            <input type="text"
+                                   class="form-control"
+                                   name="email"
+                                   id="email"
+                                   placeholder="Enter your Email"
+                                   required/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="cols-sm-2 control-label">Password</label>
+
+                    <div class="cols-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+                            <input type="password"
+                                   class="form-control"
+                                   name="password"
+                                   id="password"
+                                   placeholder="Enter your Password"
+                                   required/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm" class="cols-sm-2 control-label">Confirm Password</label>
+
+                    <div class="cols-sm-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+                            <input type="password"
+                                   class="form-control"
+                                   name="confirm"
+                                   id="confirm"
+                                   placeholder="Confirm your Password"
+                                   required/>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="alert alert-danger"
+                     id="errors"
+                     style="display: none;">
+                    <button type="button" class="close">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                    <p></p>
+                </div>
+
+                <div class="form-group ">
+                    <button type="submit"
+                            class="btn btn-primary btn-lg btn-block login-button"
+                            id="submit">
+                        Register
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script>
+    (function ($) {
+        var URL = "http://new.kabacademy.com/webservice/rest/server.php";
+        var WSTOKEN = "e7b2c6df7888f24f597e1576001efb19";
+
+        /*wsfunction=core_user_create_users
+         users[0][username]=divanov
+         users[0][createpassword]=1
+         users[0][firstname]=divanov
+         users[0][lastname]=divanov
+         users[0][email]=ivanov@opentechnology.ru
+         moodlewsrestformat=json*/
+        $(document).ready(function () {
+            $('#submit').click(function (event) {
+                event.preventDefault();
+                createUser();
+            });
+            $('#submit').click(function (event) {
+                event.preventDefault();
+                createUser();
+            });
+            $('#errors .close').click(function () {
+                $('#errors').hide();
+            })
+        });
+        function createUser() {
+            var _param = {
+                'wstoken': WSTOKEN,
+                'wsfunction': "core_user_create_users",
+                'users[0][firstname]': $('#firstname').val(),
+                'users[0][lastname]': $('#lastname').val(),
+                'users[0][email]': $('#email').val(),
+                'users[0][username]': $('#email').val(),
+                'moodlewsrestformat': 'json',
+                //users[0][createpassword]=1
+            };
+            $.post(URL, _param).done(function (r) {
+                if (r.errorcode) {
+                    $('#errors')
+                            .show()
+                            .find('p')
+                            .text(r.message);
+                    return;
+                }
+                enrollUser();
+            });
+        }
+
+        function enrollUser() {
+            var _param = {
+                'wstoken': WSTOKEN,
+                'wsfunction': "enrol_manual_enrol_users",
+            };
+            $.post(URL, _param).done(function (r) {
+
+            });
+
+        }
+
+    })(jQuery)
+
+</script>
+</body>
+</html>
