@@ -73,6 +73,7 @@
                                    name="password"
                                    id="password"
                                    placeholder="Enter your Password"
+                                   pattern=".{8,}"
                                    required/>
                         </div>
                     </div>
@@ -89,6 +90,7 @@
                                    name="confirm"
                                    id="confirm"
                                    placeholder="Confirm your Password"
+                                   pattern=".{8,}"
                                    required/>
                         </div>
                     </div>
@@ -147,19 +149,32 @@
             var _param = {
                 'wstoken': WSTOKEN,
                 'wsfunction': "core_user_create_users",
+                'moodlewsrestformat': 'json',
+
+                'users[0][username]': $('#email').val(),
                 'users[0][firstname]': $('#firstname').val(),
                 'users[0][lastname]': $('#lastname').val(),
+                'users[0][password]': $('#password').val(),
                 'users[0][email]': $('#email').val(),
-                'users[0][username]': $('#email').val(),
-                'moodlewsrestformat': 'json',
-                //users[0][createpassword]=1
             };
-            $.post(URL, _param).done(function (r) {
+            var config = {
+                url: URL,
+                data: _param,
+                type: 'GET',
+                /*headers: {
+                 'Content-Type': 'application/json',
+                 'Access-Control-Allow-Origin': '*',
+                 'Access-Control-Allow-Credentials': true,
+                 'Access-Control-Allow-Methods': 'POST,GET',
+                 'Access-Control-Allow-Headers': 'origin, content-type, accept'
+                 },*/
+            };
+            $.ajax(config).done(function (r) {
                 if (r.errorcode) {
                     $('#errors')
                             .show()
                             .find('p')
-                            .text(r.message);
+                            .html(r.message);
                     return;
                 }
                 enrollUser();
