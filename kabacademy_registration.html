@@ -17,7 +17,7 @@
             </div>
         </div>
         <div class="main-login main-center">
-            <form class="form-horizontal">
+            <form class="form-horizontal" id="register">
                 <div class="form-group">
                     <label for="firstname" class="cols-sm-2 control-label">First Name</label>
 
@@ -52,7 +52,7 @@
                     <div class="cols-sm-10">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
-                            <input type="text"
+                            <input type="email"
                                    class="form-control"
                                    name="email"
                                    id="email"
@@ -107,11 +107,11 @@
                 </div>
 
                 <div class="form-group ">
-                    <button type="submit"
-                            class="btn btn-primary btn-lg btn-block login-button"
-                            id="submit">
-                        Register
-                    </button>
+                    <input type="submit"
+                           class="btn btn-primary btn-lg btn-block login-button"
+                           id="submit">
+                    Register
+                    </input>
                 </div>
             </form>
         </div>
@@ -124,6 +124,7 @@
     (function ($) {
         var URL = "http://new.kabacademy.com/webservice/rest/server.php";
         var WSTOKEN = "e7b2c6df7888f24f597e1576001efb19";
+        var $form;
 
         /*wsfunction=core_user_create_users
          users[0][username]=divanov
@@ -143,9 +144,21 @@
             });
             $('#errors .close').click(function () {
                 $('#errors').hide();
-            })
+            });
+            $form = $("#register")[0];
         });
         function createUser() {
+            /*
+             if (!$form.checkValidity()) {
+             return;
+             }
+
+             if ($('#confirm').val() !== $('#password').val()) {
+             $('#confirm')[0].validity.set = false;
+             return;
+             }*/
+
+
             var _param = {
                 'wstoken': WSTOKEN,
                 'wsfunction': "core_user_create_users",
@@ -172,22 +185,62 @@
             $.ajax(config).done(function (r) {
                 if (r.errorcode) {
                     $('#errors')
-                            .show()
-                            .find('p')
-                            .html(r.message);
+                        .show()
+                        .find('p')
+                        .html(r.message);
                     return;
                 }
-                enrollUser();
+                enrollUser(r.userId);
+                addUserToGroup(r.userId);
             });
         }
 
-        function enrollUser() {
+        function enrollUser(id) {
             var _param = {
                 'wstoken': WSTOKEN,
                 'wsfunction': "enrol_manual_enrol_users",
+                'enrolments[0][roleid]': '1',
+                'enrolments[0][userid]': id,
+                'enrolments[0][courseid]': 18,
             };
-            $.post(URL, _param).done(function (r) {
 
+            var config = {
+                url: URL,
+                data: _param,
+                type: 'GET',
+            };
+            $.ajax(config).done(function (r) {
+                if (r.errorcode) {
+                    $('#errors')
+                        .show()
+                        .find('p')
+                        .html(r.message);
+                    return;
+                }
+            });
+        }
+
+        function addUserToGroup(id) {
+            var _param = {
+                'wstoken': WSTOKEN,
+                'wsfunction': "enrol_manual_enrol_users",
+                'enrolments[0][userid]': id,
+                'enrolments[0][groupid]': 18,
+            };
+
+            var config = {
+                url: URL,
+                data: _param,
+                type: 'GET',
+            };
+            $.ajax(config).done(function (r) {
+                if (r.errorcode) {
+                    $('#errors')
+                        .show()
+                        .find('p')
+                        .html(r.message);
+                    return;
+                }
             });
 
         }
