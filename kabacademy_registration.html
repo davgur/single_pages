@@ -118,7 +118,6 @@
                     <input type="submit"
                            class="btn btn-primary btn-lg btn-block login-button"
                            id="submit">
-                    Register
                     </input>
                 </div>
             </form>
@@ -130,12 +129,8 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script>
     (function ($) {
-        var URL, WSTOKEN, COURSE_ID, COHORT_ID;
-        URL = "http://new.kabacademy.com/webservice/rest/server.php";
-        WSTOKEN = "e7b2c6df7888f24f597e1576001efb19";
-        COURSE_ID = 9;
-        COHORT_ID = 1;
-        var $form;
+        var URL, WSTOKEN, COURSE_ID, COHORT_ID, $form;
+        setParamFromLocation();
         $(document).ready(function () {
             $('#submit').click(function (event) {
                 event.preventDefault();
@@ -148,19 +143,30 @@
             $form = $("#register")[0];
         });
 
-       /* function getParamFromLocation(){
+        function setParamFromLocation() {
+            /*
+             url must content ?wstoken=WSTOKEN&course_id=COURSE_ID&cohort_id=COHORT_ID&service=service domain
+             */
+
             var sPageURL = decodeURIComponent(window.location.search.substring(1)).split('&');
-            sPageURL.forEach(function(p){
-                var pArr = p
-                switch (){
-
+            sPageURL.forEach(function (p) {
+                var pArr = p.split('&');
+                switch (pArr[0].toLowerCase()) {
+                    case 'wstoken':
+                        WSTOKEN = pArr[1];
+                        return;
+                    case 'course_id':
+                        COURSE_ID = pArr[1];
+                        return;
+                    case 'cohort_id':
+                        COHORT_ID = pArr[1];
+                        return;
+                    case 'service':
+                        URL = "http://" + pArr[1] + "/webservice/rest/server.php";
+                        return;
                 }
-
             });
-            WSTOKEN = "e7b2c6df7888f24f597e1576001efb19";
-            COURSE_ID = 9;
-            COHORT_ID = 1;
-        }*/
+        }
 
         function createUser() {
             /*
@@ -179,11 +185,11 @@
                 'wsfunction': "core_user_create_users",
                 'moodlewsrestformat': 'json',
 
-                'users[0][username]': /*Date.now() + */$('#email').val(),
+                'users[0][username]': $('#email').val(),
                 'users[0][firstname]': $('#firstname').val(),
                 'users[0][lastname]': $('#lastname').val(),
                 'users[0][password]': $('#password').val(),
-                'users[0][email]': /*Date.now() + */$('#email').val(),
+                'users[0][email]': $('#email').val(),
             };
             var config = {
                 url: URL,
