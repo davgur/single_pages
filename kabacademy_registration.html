@@ -17,14 +17,18 @@
             </div>
         </div>
         <div class="main-login main-center">
-            <form class="form-horizontal">
+            <form class="form-horizontal" id="register">
                 <div class="form-group">
                     <label for="firstname" class="cols-sm-2 control-label">First Name</label>
 
                     <div class="cols-sm-10">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" name="firstname" id="firstname"
+                            <input type="text"
+                                   class="form-control"
+                                   name="firstname"
+                                   id="firstname"
+                                   value="11111"
                                    placeholder="Enter your First Name"/>
                         </div>
                     </div>
@@ -41,6 +45,7 @@
                                    name="lastname"
                                    id="lastname"
                                    placeholder="Enter your Last Name"
+                                   value="11111"
                                    required/>
                         </div>
                     </div>
@@ -52,11 +57,12 @@
                     <div class="cols-sm-10">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
-                            <input type="text"
+                            <input type="email"
                                    class="form-control"
                                    name="email"
                                    id="email"
                                    placeholder="Enter your Email"
+                                   value="davgur@yandex.ru"
                                    required/>
                         </div>
                     </div>
@@ -74,6 +80,7 @@
                                    id="password"
                                    placeholder="Enter your Password"
                                    pattern=".{8,}"
+                                   value="Aa123123123"
                                    required/>
                         </div>
                     </div>
@@ -91,6 +98,7 @@
                                    id="confirm"
                                    placeholder="Confirm your Password"
                                    pattern=".{8,}"
+                                   value="Aa123123123"
                                    required/>
                         </div>
                     </div>
@@ -107,11 +115,11 @@
                 </div>
 
                 <div class="form-group ">
-                    <button type="submit"
-                            class="btn btn-primary btn-lg btn-block login-button"
-                            id="submit">
-                        Register
-                    </button>
+                    <input type="submit"
+                           class="btn btn-primary btn-lg btn-block login-button"
+                           id="submit">
+                    Register
+                    </input>
                 </div>
             </form>
         </div>
@@ -122,72 +130,145 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script>
     (function ($) {
-        var URL = "http://new.kabacademy.com/webservice/rest/server.php";
-        var WSTOKEN = "e7b2c6df7888f24f597e1576001efb19";
-
-        /*wsfunction=core_user_create_users
-         users[0][username]=divanov
-         users[0][createpassword]=1
-         users[0][firstname]=divanov
-         users[0][lastname]=divanov
-         users[0][email]=ivanov@opentechnology.ru
-         moodlewsrestformat=json*/
+        var URL, WSTOKEN, COURSE_ID, COHORT_ID;
+        URL = "http://new.kabacademy.com/webservice/rest/server.php";
+        WSTOKEN = "e7b2c6df7888f24f597e1576001efb19";
+        COURSE_ID = 9;
+        COHORT_ID = 1;
+        var $form;
         $(document).ready(function () {
             $('#submit').click(function (event) {
                 event.preventDefault();
-                createUser();
-            });
-            $('#submit').click(function (event) {
-                event.preventDefault();
+                event.stopPropagation();
                 createUser();
             });
             $('#errors .close').click(function () {
                 $('#errors').hide();
-            })
+            });
+            $form = $("#register")[0];
         });
+
+       /* function getParamFromLocation(){
+            var sPageURL = decodeURIComponent(window.location.search.substring(1)).split('&');
+            sPageURL.forEach(function(p){
+                var pArr = p
+                switch (){
+
+                }
+
+            });
+            WSTOKEN = "e7b2c6df7888f24f597e1576001efb19";
+            COURSE_ID = 9;
+            COHORT_ID = 1;
+        }*/
+
         function createUser() {
+            /*
+             if (!$form.checkValidity()) {
+             return;
+             }
+
+             if ($('#confirm').val() !== $('#password').val()) {
+             $('#confirm')[0].validity.set = false;
+             return;
+             }*/
+
+
             var _param = {
                 'wstoken': WSTOKEN,
                 'wsfunction': "core_user_create_users",
                 'moodlewsrestformat': 'json',
 
-                'users[0][username]': $('#email').val(),
+                'users[0][username]': /*Date.now() + */$('#email').val(),
                 'users[0][firstname]': $('#firstname').val(),
                 'users[0][lastname]': $('#lastname').val(),
                 'users[0][password]': $('#password').val(),
-                'users[0][email]': $('#email').val(),
+                'users[0][email]': /*Date.now() + */$('#email').val(),
             };
             var config = {
                 url: URL,
                 data: _param,
-                type: 'GET',
-                /*headers: {
-                 'Content-Type': 'application/json',
-                 'Access-Control-Allow-Origin': '*',
-                 'Access-Control-Allow-Credentials': true,
-                 'Access-Control-Allow-Methods': 'POST,GET',
-                 'Access-Control-Allow-Headers': 'origin, content-type, accept'
-                 },*/
+                type: 'POST'
             };
             $.ajax(config).done(function (r) {
-                if (r.errorcode) {
-                    $('#errors')
-                            .show()
-                            .find('p')
-                            .html(r.message);
+                if (r && r.errorcode !== "invalidparameter") {
+                    $('#errors').show().find('p').html('Create new user: ' + r.message);
                     return;
                 }
-                enrollUser();
+
+                if (r && r.errorcode === "invalidparameter") {
+                    getUserByEmail();
+                    return;
+                }
+                enrollUser(r[0].id);
+                addUserToGroup(r[0].id);
             });
         }
 
-        function enrollUser() {
+        function getUserByEmail() {
             var _param = {
                 'wstoken': WSTOKEN,
-                'wsfunction': "enrol_manual_enrol_users",
-            };
-            $.post(URL, _param).done(function (r) {
+                'wsfunction': "core_user_get_users",
+                'moodlewsrestformat': 'json',
 
+                'criteria[0][key]': 'email',
+                'criteria[0][value]': $('#email').val(),
+            };
+            var config = {
+                url: URL,
+                data: _param,
+                type: 'POST'
+            };
+            $.ajax(config).done(function (r) {
+                enrollUser(r.users[0].id);
+                addUserToGroup(r.users[0].id);
+            });
+        }
+
+        function enrollUser(id) {
+            var _param = {
+                'wstoken': WSTOKEN,
+                'moodlewsrestformat': 'json',
+                'wsfunction': "enrol_manual_enrol_users",
+                'enrolments[0][roleid]': 1,
+                'enrolments[0][userid]': id,
+                'enrolments[0][courseid]': COURSE_ID,
+            };
+
+            var config = {
+                url: URL,
+                data: _param,
+                type: 'POST',
+            };
+            $.ajax(config).done(function (r) {
+                if (r && r.errorcode) {
+                    $('#errors').show().find('p').html("Enroll to course problem: " + r.message);
+                    return;
+                }
+            });
+        }
+
+        function addUserToGroup(id) {
+            var _param = {
+                'wstoken': WSTOKEN,
+                'moodlewsrestformat': 'json',
+                'wsfunction': "core_cohort_add_cohort_members",
+                'members[0][cohorttype][type]': 'id',
+                'members[0][cohorttype][value]': COHORT_ID,
+                'members[0][usertype][type]': 'id',
+                'members[0][usertype][value]': id
+            };
+
+            var config = {
+                url: URL,
+                data: _param,
+                type: 'POST',
+            };
+            $.ajax(config).done(function (r) {
+                if (r && r.errorcode) {
+                    $('#errors').show().find('p').html("Add user to group problem: " + r.message);
+                    return;
+                }
             });
 
         }
