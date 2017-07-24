@@ -122,6 +122,7 @@
 
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 <script>
     (function ($) {
         var URL, WSTOKEN, COURSE_ID, COHORT_ID, $form;
@@ -141,11 +142,16 @@
         function setParamFromLocation() {
             /*
              url must content ?wstoken=WSTOKEN&course_id=COURSE_ID&cohort_id=COHORT_ID&service=service domain
+             examlpe
+             service = "new.kabacademy.com";
+             WSTOKEN = "e7b2c6df7888f24f597e1576001efb19";
+             COURSE_ID = 9;
+             COHORT_ID = 1;
              */
 
             var sPageURL = decodeURIComponent(window.location.search.substring(1)).split('&');
             sPageURL.forEach(function (p) {
-                var pArr = p.split('&');
+                var pArr = p.split('=');
                 switch (pArr[0].toLowerCase()) {
                     case 'wstoken':
                         WSTOKEN = pArr[1];
