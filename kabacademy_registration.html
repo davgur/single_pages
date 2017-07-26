@@ -28,6 +28,7 @@
                                    class="form-control"
                                    name="firstname"
                                    id="firstname"
+                                   value="Aa123123123"
                                    placeholder="Enter your First Name"/>
                         </div>
                     </div>
@@ -43,6 +44,7 @@
                                    class="form-control"
                                    name="lastname"
                                    id="lastname"
+                                   value="Aa123123123"
                                    placeholder="Enter your Last Name"
                                    required/>
                         </div>
@@ -60,6 +62,7 @@
                                    name="email"
                                    id="email"
                                    placeholder="Enter your Email"
+                                   value="davgur@yandex.ru"
                                    required/>
                         </div>
                     </div>
@@ -76,7 +79,7 @@
                                    name="password"
                                    id="password"
                                    placeholder="Enter your Password"
-                                   pattern=".{8,}"
+                                   pattern=".{8,}" value="Aa123123123"
                                    required/>
                         </div>
                     </div>
@@ -93,7 +96,7 @@
                                    name="confirm"
                                    id="confirm"
                                    placeholder="Confirm your Password"
-                                   pattern=".{8,}"
+                                   pattern=".{8,}" value="Aa123123123"
                                    required/>
                         </div>
                     </div>
@@ -111,8 +114,7 @@
 
                 <div class="form-group ">
                     <input type="submit"
-                           class="btn btn-primary btn-lg btn-block login-button"
-                           id="submit">
+                           class="btn btn-primary btn-lg btn-block login-button">
                     </input>
                 </div>
             </form>
@@ -125,13 +127,15 @@
 
 <script>
     (function ($) {
-        var URL, WSTOKEN, COURSE_ID, COHORT_ID, $form;
+        var URL, WSTOKEN, COURSE_ID, COHORT_ID,REDIRECT, $form;
         setParamFromLocation();
         $(document).ready(function () {
-            $('#submit').click(function (event) {
+
+            $('#register').submit(function (event) {
                 event.preventDefault();
                 event.stopPropagation();
                 createUser();
+                return false;
             });
             $('#errors .close').click(function () {
                 $('#errors').hide();
@@ -165,20 +169,23 @@
                     case 'service':
                         URL = "http://" + pArr[1] + "/webservice/rest/server.php";
                         return;
+                    case 'redirect':
+                        REDIRECT = pArr[1];
+                        return;
                 }
             });
         }
 
         function createUser() {
-            /*
-             if (!$form.checkValidity()) {
-             return;
-             }
 
-             if ($('#confirm').val() !== $('#password').val()) {
-             $('#confirm')[0].validity.set = false;
-             return;
-             }*/
+            if (!$form.checkValidity()) {
+                return;
+            }
+
+            if ($('#confirm').val() !== $('#password').val()) {
+                $('#confirm')[0].validity.set = false;
+                return;
+            }
 
 
             var _param = {
@@ -208,8 +215,23 @@
                     return;
                 }
                 enrollUser(r[0].id);
-                addUserToGroup(r[0].id);
             });
+        }
+
+        function sendEmail(id) {
+            var _param = {
+                'wstoken': WSTOKEN,
+                'wsfunction': "core_message_create_contacts",
+                'moodlewsrestformat': 'json',
+
+                'userids[0]': id
+            };
+            var config = {
+                url: URL,
+                data: _param,
+                type: 'POST'
+            };
+            $.ajax(config).done(function (r) {});
         }
 
         function getUserByEmail() {
@@ -228,7 +250,6 @@
             };
             $.ajax(config).done(function (r) {
                 enrollUser(r.users[0].id);
-                addUserToGroup(r.users[0].id);
             });
         }
 
@@ -248,6 +269,7 @@
                 type: 'POST',
             };
             $.ajax(config).done(function (r) {
+                addUserToGroup(id);
                 if (r && r.errorcode) {
                     $('#errors').show().find('p').html("Enroll to course problem: " + r.message);
                     return;
@@ -272,6 +294,7 @@
                 type: 'POST',
             };
             $.ajax(config).done(function (r) {
+                window.location.replace(REDIRECT);
                 if (r && r.errorcode) {
                     $('#errors').show().find('p').html("Add user to group problem: " + r.message);
                     return;
