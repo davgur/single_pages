@@ -195,6 +195,8 @@
                 'users[0][lastname]': $('#lastname').val(),
                 'users[0][password]': $('#password').val(),
                 'users[0][email]': $('#email').val(),
+                'users[0][auth]': 'manual',
+                'users[0][mailformat]': 1,
             };
             var config = {
                 url: URL,
@@ -202,7 +204,7 @@
                 type: 'POST'
             };
             $.ajax(config).done(function (r) {
-                if (r && r.errorcode !== "invalidparameter") {
+                if (r && r.errorcode && r.errorcode !== "invalidparameter") {
                     $('#errors').show().find('p').html('Create new user: ' + r.message);
                     return;
                 }
@@ -291,7 +293,9 @@
                 type: 'POST',
             };
             $.ajax(config).done(function (r) {
-                window.location.replace(REDIRECT);
+                if(REDIRECT){
+                    window.location.replace(REDIRECT);
+                }
                 if (r && r.errorcode) {
                     $('#errors').show().find('p').html("Add user to group problem: " + r.message);
                     return;
