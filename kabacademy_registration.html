@@ -118,11 +118,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-10 col-sm-offset-2">
-                    <small>Password minimum length - 8 Digits - 1 Lowercase letters - 1 Uppercase letters - 1
-                        Non-alphanumeric characters - 1
-                    </small>
-                </div>
                 <div class="form-group">
                     <label for="password" class="col-sm-2 control-label">Password</label>
 
@@ -156,7 +151,11 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="col-sm-10 col-sm-offset-2">
+                    <small>Password minimum length - 8 Digits - 1 Lowercase letters - 1 Uppercase letters - 1
+                        Non-alphanumeric characters - 1
+                    </small>
+                </div>
 
                 <div class="alert alert-danger"
                      id="errors"
@@ -203,7 +202,7 @@
             var useIfame = false;
             if (!useIfame) {
                 WSTOKEN = 'e7b2c6df7888f24f597e1576001efb19';
-                COURSE_ID = '9';
+                COURSE_ID = '4';
                 COHORT_ID = '1';
                 URL = "http://new.kabacademy.com/webservice/rest/server.php";
                 REDIRECT = '';
@@ -275,6 +274,7 @@
             $.ajax(config).done(function (r) {
                 if (r && r.errorcode && r.errorcode !== "invalidparameter") {
                     $('#errors').show().find('p').html('Create new user: ' + r.message);
+                    $('.loader').hide();
                     return;
                 }
 
@@ -327,7 +327,7 @@
                 'wstoken': WSTOKEN,
                 'moodlewsrestformat': 'json',
                 'wsfunction': "enrol_manual_enrol_users",
-                'enrolments[0][roleid]': 1,
+                'enrolments[0][roleid]': 5,
                 'enrolments[0][userid]': id,
                 'enrolments[0][courseid]': COURSE_ID,
             };
