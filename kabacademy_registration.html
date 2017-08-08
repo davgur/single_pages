@@ -166,12 +166,6 @@
                     <p></p>
                 </div>
 
-                <div class="form-group ">
-                    <input type="submit"
-                           class="btn btn-primary btn-lg btn-block login-button"
-                           id="submit">
-                    Register
-                    </input>
                 <div class="row">
                     <input type="submit"
                            class="btn btn-primary btn-lg btn-block login-button" style="width: 200px; float: right;">
@@ -189,17 +183,6 @@
     (function ($) {
         var URL, WSTOKEN, COURSE_ID, COHORT_ID, REDIRECT, $form;
         setParamFromLocation();
-        var URL = "http://new.kabacademy.com/webservice/rest/server.php";
-        var WSTOKEN = "e7b2c6df7888f24f597e1576001efb19";
-        var $form;
-
-        /*wsfunction=core_user_create_users
-         users[0][username]=divanov
-         users[0][createpassword]=1
-         users[0][firstname]=divanov
-         users[0][lastname]=divanov
-         users[0][email]=ivanov@opentechnology.ru
-         moodlewsrestformat=json*/
         $(document).ready(function () {
 
             $('#register').submit(function (event) {
@@ -259,17 +242,6 @@
         }
 
         function createUser() {
-            /*
-             if (!$form.checkValidity()) {
-             return;
-             }
-
-             if ($('#confirm').val() !== $('#password').val()) {
-             $('#confirm')[0].validity.set = false;
-             return;
-             }*/
-
-
             if (!$form.checkValidity()) {
                 return;
             }
@@ -289,8 +261,6 @@
                 'users[0][lastname]': $('#lastname').val(),
                 'users[0][password]': $('#password').val(),
                 'users[0][email]': $('#email').val(),
-                'users[0][auth]': 'manual',
-                'users[0][mailformat]': 1,
             };
 
             var config = {
@@ -300,11 +270,9 @@
             };
 
             $.ajax(config).done(function (r) {
-                if (r &&r.errorcode&& r.errorcode !== "invalidparameter") {
-                    $('#errors')
-                            .show()
-                            .find('p')
-                            .html('Create new user: ' +r.message);$('.loader').hide();
+                if (r && r.errorcode && r.errorcode !== "invalidparameter") {
+                    $('#errors').show().find('p').html('Create new user: ' + r.message);
+                    $('.loader').hide();
                     return;
                 }
 
@@ -313,12 +281,10 @@
                     return;
                 }
                 enrollUser(r[0].id);
-                enrollUser(r.userId);
-                addUserToGroup(r.userId);
             });
         }
 
-        function enrollUser(id) {
+        function sendEmail(id) {
             var _param = {
                 'wstoken': WSTOKEN,
                 'wsfunction': "core_message_create_contacts",
@@ -362,9 +328,6 @@
                 'enrolments[0][roleid]': 5,
                 'enrolments[0][userid]': id,
                 'enrolments[0][courseid]': COURSE_ID,
-                'enrolments[0][roleid]': '1',
-                'enrolments[0][userid]': id,
-                'enrolments[0][courseid]': 18,
             };
 
             var config = {
@@ -404,43 +367,6 @@
                 }
                 if (r && r.errorcode) {
                     $('#errors').show().find('p').html("Add user to group problem: " + r.message);
-                    return;
-                }
-            var config = {
-                url: URL,
-                data: _param,
-                type: 'GET',
-            };
-            $.ajax(config).done(function (r) {
-                if (r.errorcode) {
-                    $('#errors')
-                        .show()
-                        .find('p')
-                        .html(r.message);
-                    return;
-                }
-            });
-        }
-
-        function addUserToGroup(id) {
-            var _param = {
-                'wstoken': WSTOKEN,
-                'wsfunction': "enrol_manual_enrol_users",
-                'enrolments[0][userid]': id,
-                'enrolments[0][groupid]': 18,
-            };
-
-            var config = {
-                url: URL,
-                data: _param,
-                type: 'GET',
-            };
-            $.ajax(config).done(function (r) {
-                if (r.errorcode) {
-                    $('#errors')
-                        .show()
-                        .find('p')
-                        .html(r.message);
                     return;
                 }
             });
