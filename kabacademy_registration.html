@@ -5,35 +5,92 @@
     <title></title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <style></style>
+    <style>
+        .container {
+            position: relative;
+        }
+
+        .loader {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .loader-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            height: 200px;
+            width: 500px;
+            margin: -100px 0 0 -250px;
+            text-align: center;
+        }
+
+        .loader-container .img {
+            margin: 0 auto;
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #3498db;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+    </style>
 </head>
 <body>
 <div class="container">
-    <div class="row main">
+    <!-- Preloader -->
+    <div class='loader'>
+        <div class='loader-container'>
+            <h4 style="margin-bottom: 50px; color: white;">Please wait a moment while we are preparing the content!</h4>
+
+            <div class='img'></div>
+        </div>
+    </div>
+
+    <div class="main">
         <div class="panel-heading">
             <div class="panel-title text-center">
-                <h1 class="title">Company Name</h1>
+                <h1 class="title">Registration</h1>
                 <hr/>
             </div>
         </div>
         <div class="main-login main-center">
             <form class="form-horizontal" id="register">
                 <div class="form-group">
-                    <label for="firstname" class="cols-sm-2 control-label">First Name</label>
+                    <label for="firstname" class="col-sm-2 control-label">First Name</label>
 
-                    <div class="cols-sm-10">
+                    <div class="col-sm-10">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" name="firstname" id="firstname"
+                            <input type="text"
+                                   class="form-control"
+                                   name="firstname"
+                                   id="firstname"
                                    placeholder="Enter your First Name"/>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="lastname" class="cols-sm-2 control-label">Last Name</label>
+                    <label for="lastname" class="col-sm-2 control-label">Last Name</label>
 
-                    <div class="cols-sm-10">
+                    <div class="col-sm-10">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
                             <input type="text"
@@ -47,9 +104,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="email" class="cols-sm-2 control-label">Your Email</label>
+                    <label for="email" class="col-sm-2 control-label">Your Email</label>
 
-                    <div class="cols-sm-10">
+                    <div class="col-sm-10">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
                             <input type="email"
@@ -61,11 +118,10 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="form-group">
-                    <label for="password" class="cols-sm-2 control-label">Password</label>
+                    <label for="password" class="col-sm-2 control-label">Password</label>
 
-                    <div class="cols-sm-10">
+                    <div class="col-sm-10">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
                             <input type="password"
@@ -80,9 +136,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="confirm" class="cols-sm-2 control-label">Confirm Password</label>
+                    <label for="confirm" class="col-sm-2 control-label">Confirm Password</label>
 
-                    <div class="cols-sm-10">
+                    <div class="col-sm-10">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
                             <input type="password"
@@ -95,7 +151,11 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="col-sm-10 col-sm-offset-2">
+                    <small>Password minimum length - 8 Digits - 1 Lowercase letters - 1 Uppercase letters - 1
+                        Non-alphanumeric characters - 1
+                    </small>
+                </div>
 
                 <div class="alert alert-danger"
                      id="errors"
@@ -112,6 +172,10 @@
                            id="submit">
                     Register
                     </input>
+                <div class="row">
+                    <input type="submit"
+                           class="btn btn-primary btn-lg btn-block login-button" style="width: 200px; float: right;">
+                    </input>
                 </div>
             </form>
         </div>
@@ -120,8 +184,11 @@
 
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 <script>
     (function ($) {
+        var URL, WSTOKEN, COURSE_ID, COHORT_ID, REDIRECT, $form;
+        setParamFromLocation();
         var URL = "http://new.kabacademy.com/webservice/rest/server.php";
         var WSTOKEN = "e7b2c6df7888f24f597e1576001efb19";
         var $form;
@@ -134,19 +201,63 @@
          users[0][email]=ivanov@opentechnology.ru
          moodlewsrestformat=json*/
         $(document).ready(function () {
-            $('#submit').click(function (event) {
+
+            $('#register').submit(function (event) {
                 event.preventDefault();
+                event.stopPropagation();
+                $('.loader').show();
                 createUser();
-            });
-            $('#submit').click(function (event) {
-                event.preventDefault();
-                createUser();
+                return false;
             });
             $('#errors .close').click(function () {
                 $('#errors').hide();
             });
             $form = $("#register")[0];
         });
+
+        function setParamFromLocation() {
+            var useIfame = false;
+            if (!useIfame) {
+                WSTOKEN = 'e7b2c6df7888f24f597e1576001efb19';
+                COURSE_ID = '4';
+                COHORT_ID = '1';
+                URL = "http://new.kabacademy.com/webservice/rest/server.php";
+                REDIRECT = 'http://new.kabacademy.com/course/view.php?id=4';
+                return;
+            }
+
+            /*
+             url must content ?wstoken=WSTOKEN&course_id=COURSE_ID&cohort_id=COHORT_ID&service=service domain
+             examlpe
+             service = "new.kabacademy.com";
+             WSTOKEN = "e7b2c6df7888f24f597e1576001efb19";
+             COURSE_ID = 9;
+             COHORT_ID = 1;
+             */
+
+            var sPageURL = decodeURIComponent(window.location.search.substring(1)).split('&');
+            sPageURL.forEach(function (p) {
+                var pArr = p.split('=');
+                switch (pArr[0].toLowerCase()) {
+                    case 'wstoken':
+                        WSTOKEN = pArr[1];
+                        return;
+                    case 'course_id':
+                        COURSE_ID = pArr[1];
+                        return;
+                    case 'cohort_id':
+                        COHORT_ID = pArr[1];
+                        return;
+                    case 'service':
+                        URL = "http://" + pArr[1] + "/webservice/rest/server.php";
+                        return;
+                    case 'redirect':
+                        REDIRECT = pArr[1];
+                        return;
+                }
+            });
+        }
+
         function createUser() {
             /*
              if (!$form.checkValidity()) {
@@ -159,6 +270,15 @@
              }*/
 
 
+            if (!$form.checkValidity()) {
+                return;
+            }
+
+            if ($('#confirm').val() !== $('#password').val()) {
+                $('#confirm')[0].validity.set = false;
+                return;
+            }
+
             var _param = {
                 'wstoken': WSTOKEN,
                 'wsfunction': "core_user_create_users",
@@ -169,27 +289,30 @@
                 'users[0][lastname]': $('#lastname').val(),
                 'users[0][password]': $('#password').val(),
                 'users[0][email]': $('#email').val(),
+                'users[0][auth]': 'manual',
+                'users[0][mailformat]': 1,
             };
+
             var config = {
                 url: URL,
                 data: _param,
-                type: 'GET',
-                /*headers: {
-                 'Content-Type': 'application/json',
-                 'Access-Control-Allow-Origin': '*',
-                 'Access-Control-Allow-Credentials': true,
-                 'Access-Control-Allow-Methods': 'POST,GET',
-                 'Access-Control-Allow-Headers': 'origin, content-type, accept'
-                 },*/
+                type: 'POST'
             };
+
             $.ajax(config).done(function (r) {
-                if (r.errorcode) {
+                if (r &&r.errorcode&& r.errorcode !== "invalidparameter") {
                     $('#errors')
-                        .show()
-                        .find('p')
-                        .html(r.message);
+                            .show()
+                            .find('p')
+                            .html('Create new user: ' +r.message);$('.loader').hide();
                     return;
                 }
+
+                if (r && r.errorcode === "invalidparameter") {
+                    getUserByEmail();
+                    return;
+                }
+                enrollUser(r[0].id);
                 enrollUser(r.userId);
                 addUserToGroup(r.userId);
             });
@@ -198,12 +321,91 @@
         function enrollUser(id) {
             var _param = {
                 'wstoken': WSTOKEN,
+                'wsfunction': "core_message_create_contacts",
+                'moodlewsrestformat': 'json',
+
+                'userids[0]': id
+            };
+            var config = {
+                url: URL,
+                data: _param,
+                type: 'POST'
+            };
+            $.ajax(config).done(function (r) {
+            });
+        }
+
+        function getUserByEmail() {
+            var _param = {
+                'wstoken': WSTOKEN,
+                'wsfunction': "core_user_get_users",
+                'moodlewsrestformat': 'json',
+
+                'criteria[0][key]': 'email',
+                'criteria[0][value]': $('#email').val(),
+            };
+            var config = {
+                url: URL,
+                data: _param,
+                type: 'POST'
+            };
+            $.ajax(config).done(function (r) {
+                enrollUser(r.users[0].id);
+            });
+        }
+
+        function enrollUser(id) {
+            var _param = {
+                'wstoken': WSTOKEN,
+                'moodlewsrestformat': 'json',
                 'wsfunction': "enrol_manual_enrol_users",
+                'enrolments[0][roleid]': 5,
+                'enrolments[0][userid]': id,
+                'enrolments[0][courseid]': COURSE_ID,
                 'enrolments[0][roleid]': '1',
                 'enrolments[0][userid]': id,
                 'enrolments[0][courseid]': 18,
             };
 
+            var config = {
+                url: URL,
+                data: _param,
+                type: 'POST',
+            };
+            $.ajax(config).done(function (r) {
+                addUserToGroup(id);
+                if (r && r.errorcode) {
+                    $('#errors').show().find('p').html("Enroll to course problem: " + r.message);
+                    return;
+                }
+            });
+        }
+
+        function addUserToGroup(id) {
+            var _param = {
+                'wstoken': WSTOKEN,
+                'moodlewsrestformat': 'json',
+                'wsfunction': "core_cohort_add_cohort_members",
+                'members[0][cohorttype][type]': 'id',
+                'members[0][cohorttype][value]': COHORT_ID,
+                'members[0][usertype][type]': 'id',
+                'members[0][usertype][value]': id
+            };
+
+            var config = {
+                url: URL,
+                data: _param,
+                type: 'POST',
+            };
+            $.ajax(config).done(function (r) {
+                $('.loader').hide();
+                if (REDIRECT) {
+                    window.location.replace(REDIRECT);
+                }
+                if (r && r.errorcode) {
+                    $('#errors').show().find('p').html("Add user to group problem: " + r.message);
+                    return;
+                }
             var config = {
                 url: URL,
                 data: _param,
