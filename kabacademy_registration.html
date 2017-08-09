@@ -76,6 +76,7 @@
                                    id="firstname"
                                    placeholder="Имя"
                                    required
+                                   title="Пожалуйста заполните это поле"
                                    oninvalid="setCustomValidity('Пожалуйста заполните это поле')"
                                    oninput="try{setCustomValidity('')}catch(e){}"/>
                         </div>
@@ -92,6 +93,7 @@
                                    id="lastname"
                                    placeholder="Фамилия"
                                    required
+                                   title="Пожалуйста заполните это поле"
                                    oninvalid="setCustomValidity('Пожалуйста заполните это поле')"
                                    oninput="try{setCustomValidity('')}catch(e){}"/>
                         </div>
@@ -108,6 +110,7 @@
                                    id="email"
                                    placeholder="Е-мейл"
                                    required
+                                   title="Пожалуйста заполните это поле по примеру - example@domain.ru"
                                    oninvalid="setCustomValidity('Пожалуйста заполните это поле по примеру - example@domain.ru')"
                                    oninput="try{setCustomValidity('')}catch(e){}"/>
                         </div>
@@ -124,6 +127,7 @@
                                    placeholder="Пароль"
                                    pattern=".{8,}"
                                    required
+                                   title="Пароль должен содержать символов - не менее 8, цифр - не менее 1, строчных букв - не менее 1, прописных букв - не менее 1"
                                    oninvalid="setCustomValidity('Пароль должен содержать символов - не менее 8, цифр - не менее 1, строчных букв - не менее 1, прописных букв - не менее 1')"
                                    oninput="try{setCustomValidity('')}catch(e){}"/>
                         </div>
@@ -141,6 +145,7 @@
                                    placeholder="Повторите пароль"
                                    pattern=".{8,}"
                                    required
+                                   title="Пароль должен содержать символов - не менее 8, цифр - не менее 1, строчных букв - не менее 1, прописных букв - не менее 1"
                                    oninvalid="setCustomValidity('Пароль должен содержать символов - не менее 8, цифр - не менее 1, строчных букв - не менее 1, прописных букв - не менее 1')"
                                    oninput="try{setCustomValidity('')}catch(e){}"/>
                         </div>
@@ -358,7 +363,7 @@
                 'moodlewsrestformat': 'json',
                 'wsfunction': "core_cohort_add_cohort_members",
                 'members': [{
-                    'cohorttype': {type: 'id', value: COHORT_ID},
+                    //'cohorttype': {type: 'id', value: COHORT_ID},
                     'usertype': {type: 'id', value: id}
                 }]
             };
