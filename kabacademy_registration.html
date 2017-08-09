@@ -121,7 +121,7 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" style="margin-bottom: 20px">
                     <div class="col-xd-12">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
@@ -134,7 +134,9 @@
                                    required/>
                         </div>
                     </div>
+                    <small>Пароль должен содержать символов - не менее 8, цифр - не менее 1, строчных букв - не менее 1, прописных букв - не менее 1</small>
                 </div>
+
                 <div class="alert alert-danger"
                      id="errors"
                      style="display: none;">
@@ -246,7 +248,7 @@
                 lastname: $('#lastname').val(),
                 password: $('#password').val(),
                 email: $('#email').val(),
-                preferences: [{'type': 'auth_forcepasswordchange', 'value': true}]
+                //preferences: [{'type': 'auth_forcepasswordchange', 'value': true}]
             };
 
             var _param = {
