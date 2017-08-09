@@ -74,7 +74,10 @@
                                    class="form-control"
                                    name="firstname"
                                    id="firstname"
-                                   placeholder="Имя"/>
+                                   placeholder="Имя"
+                                   required
+                                   oninvalid="setCustomValidity('Пожалуйста заполните это поле')"
+                                   oninput="try{setCustomValidity('')}catch(e){}"/>
                         </div>
                     </div>
                 </div>
@@ -88,7 +91,9 @@
                                    name="lastname"
                                    id="lastname"
                                    placeholder="Фамилия"
-                                   required/>
+                                   required
+                                   oninvalid="setCustomValidity('Пожалуйста заполните это поле')"
+                                   oninput="try{setCustomValidity('')}catch(e){}"/>
                         </div>
                     </div>
                 </div>
@@ -102,7 +107,9 @@
                                    name="email"
                                    id="email"
                                    placeholder="Е-мейл"
-                                   required/>
+                                   required
+                                   oninvalid="setCustomValidity('Пожалуйста заполните это поле по примеру - example@domain.ru')"
+                                   oninput="try{setCustomValidity('')}catch(e){}"/>
                         </div>
                     </div>
                 </div>
@@ -116,7 +123,9 @@
                                    id="password"
                                    placeholder="Пароль"
                                    pattern=".{8,}"
-                                   required/>
+                                   required
+                                   oninvalid="setCustomValidity('Пароль должен содержать символов - не менее 8, цифр - не менее 1, строчных букв - не менее 1, прописных букв - не менее 1')"
+                                   oninput="try{setCustomValidity('')}catch(e){}"/>
                         </div>
                     </div>
                 </div>
@@ -131,10 +140,14 @@
                                    id="confirm"
                                    placeholder="Повторите пароль"
                                    pattern=".{8,}"
-                                   required/>
+                                   required
+                                   oninvalid="setCustomValidity('Пароль должен содержать символов - не менее 8, цифр - не менее 1, строчных букв - не менее 1, прописных букв - не менее 1')"
+                                   oninput="try{setCustomValidity('')}catch(e){}"/>
                         </div>
                     </div>
-                    <small>Пароль должен содержать символов - не менее 8, цифр - не менее 1, строчных букв - не менее 1, прописных букв - не менее 1</small>
+                    <small>Пароль должен содержать символов - не менее 8, цифр - не менее 1, строчных букв - не менее 1,
+                        прописных букв - не менее 1
+                    </small>
                 </div>
 
                 <div class="alert alert-danger"
@@ -149,7 +162,8 @@
 
                 <div class="row">
                     <input type="checkbox" id="licenseCHB"/>
-                    <a target="_blank" href="https://docs.google.com/document/d/1fiSg7E_Y1QJOwlKBGsPs-yLSsb0O69_8nqrLgQAaWpY/edit#heading=h.2s0olqbmhgal">
+                    <a target="_blank"
+                       href="https://docs.google.com/document/d/1fiSg7E_Y1QJOwlKBGsPs-yLSsb0O69_8nqrLgQAaWpY/edit#heading=h.2s0olqbmhgal">
                         Я прочитал и согласен с условиями пользовательского соглашения
                     </a>
                 </div>
