@@ -213,10 +213,10 @@
       var useIfame = false;
       if (!useIfame) {
         WSTOKEN = 'e7b2c6df7888f24f597e1576001efb19';
-        COURSE_ID = '4';
+        COURSE_ID = '10';
         COHORT_ID = '1';
         URL = 'http://new.kabacademy.com/webservice/rest/server.php';
-        REDIRECT = 'http://new.kabacademy.com/course/view.php?id=4';
+        REDIRECT = 'http://new.kabacademy.com/course/view.php?id=10';
         return;
       }
 
@@ -339,7 +339,7 @@
         'moodlewsrestformat': 'json',
         'wsfunction': 'enrol_manual_enrol_users',
         'enrolments': [
-          { roleid: 5, userid: id, courseid: COURSE_ID, }
+          { roleid: 5, userid: id, courseid: COURSE_ID}
         ]
       };
 
@@ -349,11 +349,11 @@
         type: 'POST',
       };
       $.ajax(config).done(function (r) {
-        addUserToGroup(id);
         if (r && r.errorcode) {
           $('#errors').show().find('p').html('Enroll to course problem: ' + r.message);
           return;
         }
+        return addUserToGroup(id);
       });
     }
 
