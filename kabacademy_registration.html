@@ -285,7 +285,7 @@
 
       $.ajax(config).done(function (r) {
         if (r && r.errorcode && r.errorcode !== 'invalidparameter') {
-          $('#errors').show().find('p').html('Create new user: ' + r.message);
+          $('#errors').show().find('p').html('При создании нового юзера возникла ошибка: ' + r.message);
           $('.loader').hide();
           return;
         }
